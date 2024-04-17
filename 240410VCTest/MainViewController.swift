@@ -11,9 +11,6 @@ import GameplayKit
 
 
 func debugDelay(_ seconds: Int) async {
-//    if !CONST.slowLoad {
-//        return
-//    }
     let ns = UInt64(seconds) * 1_000_000_000
     do {
         try await Task.sleep(nanoseconds: ns)
@@ -134,24 +131,6 @@ extension MainViewController: ViewControllerDelegate {
         // Show the screen
         let vc = MenuViewController()
         vc.vcDelegate = self
-        //        vc.modalPresentationStyle = .currentContext
-        //        vc.modalPresentationStyle = .overFullScreen
-        //        vc.modalTransitionStyle = .crossDissolve
-        //        self.show(vc, sender: self)
-        
-        /*---------
-         addChild(vc)
-         vc.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * heightPercent)
-         view.addSubview(vc.view)
-         vc.didMove(toParent: self)
-         
-         if let cvc = currentVC {
-         cvc.willMove(toParent: nil)
-         cvc.view.removeFromSuperview()
-         cvc.removeFromParent()
-         }
-         ----------*/
-        //        currentVC?.dismiss(animated: true)
         
         addChild(vc)
         print("MainViewController::presentMenuScreen - after addchild - children = [\(self.children)]")
@@ -193,8 +172,6 @@ extension MainViewController: ViewControllerDelegate {
                 self.currentVC = vc
             }
         )
-        
-        
         
         view.bringSubviewToFront(adViewController.view)
     }
@@ -306,94 +283,26 @@ extension MainViewController: ViewControllerDelegate {
         // Make sure the add view stays on top
         view.bringSubviewToFront(adViewController.view)
     }
-        
-/*    func presentGameScreen() {
-        print("MainViewController::presentGameScreen - top")
-        
-        let vc = GameViewController()
-        vc.vcDelegate = self
-        
-
-//        view.insertSubview(vc.view, belowSubview: currentVC!.view)
-//        view.insertSubview(vc.view, at: 0)
-        addChild(vc)
-        print("MainViewController::presentGameScreen - vc.view = [\(vc.view)], currentVC!.view = [\(currentVC!.view)]")
-
-        vc.view.layer.zPosition = -1.0 // This places the game *behind* the menu, so that as the menu slides down, the game is revealed.  A "reveal" transition.
-        // DEBUG - dump subviews
-        for i in 0..<view.subviews.count {
-            print("MainViewController::presentGameScreen - A) view.subviews[\(i)] = [\(view.subviews[i])], view.subviews[\(i)].layer.zPosition = [\(view.subviews[i].layer.zPosition)]")
-
-        }
-        view.subviews.forEach { subView in
-            print("MainViewController::presentGameScreen - Az) subView = [\(subView)]")
-        }
-        
-        
-        vc.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * heightPercent)
-//        view.insertSubview(vc.view, at: 1)
-        
-        // DEBUG - dump subviews
-        view.subviews.forEach { subView in
-            print("MainViewController::presentGameScreen - B) subView = [\(subView)]")
-        }
-        
-//        vc.view.removeFromSuperview()
-//        view.insertSubview(vc.view, belowSubview: currentVC!.view)
-//        vc.view.isHidden = true
-        vc.didMove(toParent: self)
-//        vc.view.isHidden=true // when this is uncommented, you can see that the menu is successfully animating down.  The problem is simply that the game VC is displayed in front of it.
-        print("MainViewController::presentGameScreen - after addchild - children = [\(self.children)]")
-        currentVC!.willMove(toParent: nil)
-        beginAnimationRevealDown(fromView: currentVC!.view, toView: vc.view)
-        transition(
-            from: currentVC!,
-            to: vc,
-            duration: 0.4,
-            options: [.curveEaseOut],
-            animations: {
-                self.endAnimationRevealDown(
-                    fromView: self.currentVC!.view,
-                    toView: vc.view
-                )
-            },
-            completion: { _ in
-                vc.didMove(toParent: self)
-                if let cvc = self.currentVC {
-                    cvc.willMove(toParent: nil)
-                    cvc.view.removeFromSuperview()
-                    cvc.removeFromParent()
-                    // DEBUG - dump subviews
-                    self.view.subviews.forEach { subView in
-                        print("MainViewController::presentGameScreen - C) subView = [\(subView)]")
-                    }
-                }
-//               self.currentVC!.removeFromParent()
-                self.currentVC = vc
-            }
-        )
-        view.bringSubviewToFront(adViewController.view)
-    }
- */
     
     func presentHelpScreen() {
         print("MainViewController::presentHelpScreen - top")
         print("MainViewController::presentHelpScreen - children = [\(self.children)]")
 
         // Create the new vc
-        let vc = HelpPageViewController()
+        let vc = HelpPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         vc.vcDelegate = self
         
         // Transition to the new vc
         addChild(vc)
         print("MainViewController::presentHelpScreen - after addchild - children = [\(self.children)]")
-        vc.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * heightPercent)
+        vc.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * heightPercent) // triggers help page vc viewDidLoad
+        print("MainViewController::presentHelpScreen - vc.view.frame = [\(vc.view.frame)]")
         currentVC!.willMove(toParent: nil)
         beginAnimation(fromView: currentVC!.view, toView: vc.view)
         transition(
             from: currentVC!,
             to: vc,
-            duration: 2.5,
+            duration: 0.4,
             options: [.curveEaseOut],
             animations: {
                 self.endAnimation(
@@ -403,14 +312,17 @@ extension MainViewController: ViewControllerDelegate {
             },
             completion: { _ in
                 vc.didMove(toParent: self)
-                vc.displayFirstPage()
-                self.currentVC!.removeFromParent()
+               if let cvc = self.currentVC {
+                    cvc.willMove(toParent: nil)
+                    cvc.view.removeFromSuperview()
+                    cvc.removeFromParent()
+                }
                 self.currentVC = vc
             }
         )
         
-        // Set new current vc
-//        currentVC = vc
+        // Make sure the add view stays on top
+        view.bringSubviewToFront(adViewController.view)
     }
 
     func showAdView() {
@@ -444,13 +356,13 @@ extension MainViewController: ViewControllerDelegate {
                 )
             },
             completion: { _ in
+                print("MainViewController::presentRexScreen - Completion")
                 vc.didMove(toParent: self)
                 if let cvc = self.currentVC {
-//                    cvc.willMove(toParent: nil)
+                    cvc.willMove(toParent: nil)
                     cvc.view.removeFromSuperview()
                     cvc.removeFromParent()
                 }
-//               self.currentVC!.removeFromParent()
                 self.currentVC = vc
             }
         )

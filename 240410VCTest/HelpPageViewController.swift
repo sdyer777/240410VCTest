@@ -9,11 +9,10 @@ import UIKit
 
 
 class HelpPageViewController:  BasePageViewController  {
-    var vcDelegate: ViewControllerDelegate!
 
     override func viewDidLoad()  {
         print("HelpPageViewController::viewDidLoad - Top")
-        pageTitleText = "Themes"
+        pageTitleText = "Help"
         super.viewDidLoad()
 
         // Add a view controller (i.e. a page) for each theme
@@ -26,7 +25,8 @@ class HelpPageViewController:  BasePageViewController  {
         print("HelpPageViewController::viewDidLayoutSubviews - top - view.frame = [\(view.frame)]")
         print("HelpPageViewController::viewDidLayoutSubviews - top - children = [\(self.children)]")
         super.viewDidLayoutSubviews()
-//        displayFirstPage()
+
+        displayFirstPage()
     }
 
     func addHelpViewController(pageNumber: Int) {
@@ -34,7 +34,6 @@ class HelpPageViewController:  BasePageViewController  {
         let vc = UIViewController()
         
         let view = HelpView(frame: view.frame, page: pageNumber)
-//        view.sceneManagerDelegate = sceneManagerDelegate
         vc.view.addSubview(view)
         
         VCArr.append(vc)

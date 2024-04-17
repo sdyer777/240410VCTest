@@ -11,7 +11,7 @@ import UIKit
 
 class BasePageViewController:  UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate  {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//    var sceneManagerDelegate: SceneManagerDelegate?
+    var vcDelegate: ViewControllerDelegate!
 
     var pages = [UIViewController]()
     let pageControl = UIPageControl() // external - not part of underlying pages
@@ -21,8 +21,10 @@ class BasePageViewController:  UIPageViewController, UIPageViewControllerDataSou
     var pageTitle: UILabel!
     var pageTitleText: String = ""
     var VCArr: [UIViewController] = []
+    
+    var backButton: UIButton!
 
-    private lazy var backButton: UIButton = {
+    private lazy var createBackButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Back", for: .normal)
         // Customize your button here
@@ -30,21 +32,22 @@ class BasePageViewController:  UIPageViewController, UIPageViewControllerDataSou
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(backButtonTapped(_:)), for: .touchUpInside)
         button.frame.size.width = 400
+        button.center = CGPoint(x: view.frame.width/2, y: view.frame.height - 100)
         return button
     }()
     
     override func viewDidLoad()  {
         print("BasePageViewController::viewDidLoad - Top")
         super.viewDidLoad()
+
         self.dataSource = self
         self.delegate = self
         
         // Rexxle title, does not move with pages.
         rexxleTitle = UILabel(frame: CGRect(x: 0, y: 60, width: 300, height: 80))
-        rexxleTitle.text = "VCTEST"
-        rexxleTitle.font = UIFont.init(name: "HelveticaNeue-ultralight", size: 80)
+        rexxleTitle.text = "VCTest"
+        rexxleTitle.font = UIFont.init(name: "HelveticaNeue-ultralight", size: 60)
         rexxleTitle.textColor = UIColor.blue
-        rexxleTitle.center = CGPoint(x: 130, y: 93)
         rexxleTitle.textAlignment = .center
         view.addSubview(rexxleTitle)
         
@@ -52,12 +55,13 @@ class BasePageViewController:  UIPageViewController, UIPageViewControllerDataSou
         pageTitle = UILabel(frame: CGRect(x: 0, y: 60, width: 300, height: 50))
         pageTitle.text = pageTitleText
         pageTitle.textColor = UIColor.black
-        pageTitle.center = CGPoint(x: 310, y: 112)
         pageTitle.textAlignment = .center
         view.addSubview(pageTitle)
         
         // Constant Back button which does not move as the user pages
+        backButton = createBackButton
         view.addSubview(backButton)
+
         // Set up auto layout constraints for the button
         NSLayoutConstraint.activate([
             backButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100), // adjust constant as needed
@@ -68,24 +72,37 @@ class BasePageViewController:  UIPageViewController, UIPageViewControllerDataSou
     func displayFirstPage() {
         // Display the first page
         if let firstVC = VCArr.first {
+            print("BasePageViewController::displayFirstPage - displaying firstVC = [\(firstVC)]")
             setViewControllers([firstVC], direction: .forward, animated: true, completion: nil)
         }
     }
     
     // Action method for the button
     @objc func backButtonTapped(_ sender: UIButton) {
-        // Dismiss self back to the previous UI view controller
-        self.dismiss(animated: true)
+        print("BasePageViewController - backButton Was Tapped")
+
+        vcDelegate.presentMenuScreen()
     }
     
     override func viewDidLayoutSubviews() {
         print("BasePageViewController::viewDidLayoutSubviews - Top")
         super.viewDidLayoutSubviews()
+        
+        // Position titles and buttons
+        rexxleTitle.center = CGPoint(x: 130, y: 93)
+        pageTitle.center = CGPoint(x: 310, y: 112)
+        backButton.center = CGPoint(x: view.frame.width/2, y: view.frame.height - 60)
+        
+        // Position the scroll view (WHY?) and the page indicator control
         for sview in self.view.subviews {
+            print("BasePageViewController::viewDidLayoutSubviews - sview = [\(sview)]")
             if sview is UIScrollView {
-                sview.frame = UIScreen.main.bounds
+                print("BasePageViewController::viewDidLayoutSubviews - sview is a UIScrollView - sview = [\(sview)]")
+                sview.frame = CGRect(x: 0, y: 150, width: view.frame.width, height: view.frame.height/2+50)
+                sview.backgroundColor = UIColor.orange
             } else if sview is UIPageControl {
-                sview.backgroundColor = UIColor.clear
+                print("BasePageViewController::viewDidLayoutSubviews - sview is a UIPageControl - sview = [\(sview)]")
+                sview.backgroundColor = UIColor.purple
                 // Save the original size
                 let originalFrame = sview.frame
                 let newX: CGFloat = (view.frame.size.width/2)-60 // New X coordinate

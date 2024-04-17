@@ -10,8 +10,12 @@ import Foundation
 
 class MenuViewController: UIViewController {
     var vcDelegate: ViewControllerDelegate!
+    var gameButton: UIButton!
+    var helpButton: UIButton!
+    var hideAdsButton: UIButton!
+    var rexButton: UIButton!
 
-    private lazy var gameButton: UIButton = {
+    private lazy var createGameButton: UIButton = {
         let gameButton = UIButton(type: .system)
         gameButton.setTitle("Play Game", for: .normal)
         gameButton.backgroundColor = UIColor.lightGray
@@ -24,12 +28,12 @@ class MenuViewController: UIViewController {
         gameButton.layer.masksToBounds = true
         gameButton.translatesAutoresizingMaskIntoConstraints = false
         gameButton.addTarget(self, action: #selector(gameButtonTapped(_:)), for: .touchUpInside)
-        gameButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
-        gameButton.center = CGPoint(x: view.frame.width/2, y: 300)
+//        gameButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+//        gameButton.center = CGPoint(x: view.frame.width/2, y: 300)
         return gameButton
     }()
         
-    private lazy var helpButton: UIButton = {
+    private lazy var createHelpButton: UIButton = {
         let helpButton = UIButton(type: .system)
         helpButton.setTitle("Help", for: .normal)
         helpButton.backgroundColor = UIColor.lightGray
@@ -42,12 +46,12 @@ class MenuViewController: UIViewController {
         helpButton.layer.masksToBounds = true
         helpButton.translatesAutoresizingMaskIntoConstraints = false
         helpButton.addTarget(self, action: #selector(helpButtonTapped(_:)), for: .touchUpInside)
-        helpButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
-        helpButton.center = CGPoint(x: view.frame.width/2, y: 375)
+//        helpButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+//        helpButton.center = CGPoint(x: view.frame.width/2, y: 375)
         return helpButton
     }()
         
-    private lazy var hideAdsButton: UIButton = {
+    private lazy var createHideAdsButton: UIButton = {
         let hideAdsButton = UIButton(type: .system)
         hideAdsButton.setTitle("Hide Ads", for: .normal)
         hideAdsButton.backgroundColor = UIColor.lightGray
@@ -60,12 +64,12 @@ class MenuViewController: UIViewController {
         hideAdsButton.layer.masksToBounds = true
         hideAdsButton.translatesAutoresizingMaskIntoConstraints = false
         hideAdsButton.addTarget(self, action: #selector(hideAdsButtonTapped(_:)), for: .touchUpInside)
-        hideAdsButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
-        hideAdsButton.center = CGPoint(x: view.frame.width/2, y: 450)
+//        hideAdsButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+//        hideAdsButton.center = CGPoint(x: view.frame.width/2, y: 450)
         return hideAdsButton
     }()
         
-    private lazy var rexButton: UIButton = {
+    private lazy var createRexButton: UIButton = {
         let rexButton = UIButton(type: .system)
         rexButton.setTitle("Rex", for: .normal)
         rexButton.backgroundColor = UIColor.lightGray
@@ -78,8 +82,8 @@ class MenuViewController: UIViewController {
         rexButton.layer.masksToBounds = true
         rexButton.translatesAutoresizingMaskIntoConstraints = false
         rexButton.addTarget(self, action: #selector(rexButtonTapped(_:)), for: .touchUpInside)
-        rexButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
-        rexButton.center = CGPoint(x: view.frame.width/2, y: 525)
+//        rexButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+//        rexButton.center = CGPoint(x: view.frame.width/2, y: 525)
         return rexButton
     }()
         
@@ -99,6 +103,11 @@ class MenuViewController: UIViewController {
         view.addSubview(derLabel)
         
         // Add buttons
+        gameButton = createGameButton
+        helpButton = createHelpButton
+        hideAdsButton = createHideAdsButton
+        rexButton = createRexButton
+
         view.addSubview(gameButton)
         view.addSubview(helpButton)
         view.addSubview(hideAdsButton)
@@ -109,6 +118,18 @@ class MenuViewController: UIViewController {
         print("MenuViewController::viewDidLayoutSubviews - top - view.frame = [\(view.frame)]")
         print("MenuViewController::viewDidLayoutSubviews - top - children = [\(self.children)]")
         super.viewDidLayoutSubviews()
+        
+        gameButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+        gameButton.center = CGPoint(x: view.frame.width/2, y: 300)
+        
+        helpButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+        helpButton.center = CGPoint(x: view.frame.width/2, y: 375)
+
+        hideAdsButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+        hideAdsButton.center = CGPoint(x: view.frame.width/2, y: 450)
+
+        rexButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+        rexButton.center = CGPoint(x: view.frame.width/2, y: 525)
     }
 
     @objc func gameButtonTapped(_ sender: UIButton) {
@@ -121,8 +142,8 @@ class MenuViewController: UIViewController {
         
         vcDelegate.presentHelpScreen()
 
-        
-/*        let vc  = HelpPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+/*
+        let vc  = HelpPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         vc.modalPresentationStyle = .overFullScreen
         vc.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * 0.8)
         vc.modalTransitionStyle = .crossDissolve

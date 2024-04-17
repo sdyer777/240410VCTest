@@ -25,7 +25,7 @@ class HelpView: UIView {
         derButton.translatesAutoresizingMaskIntoConstraints = false
         derButton.addTarget(self, action: #selector(derButtonTapped(_:)), for: .touchUpInside)
         derButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
-        derButton.center = CGPoint(x: frame.width/2, y: 400)
+        derButton.center = CGPoint(x: frame.width/2, y: 225)
         return derButton
     }()
         
@@ -41,15 +41,16 @@ class HelpView: UIView {
     }
     
     private func setupView() {
+        print("HelpView::setupView - Top")
         // Set background color
-        backgroundColor = UIColor.systemPink // Change the color as per your requirement
+        backgroundColor = UIColor.green // Change the color as per your requirement
         
         // Theme Name
         let label1 = UILabel(frame: CGRect(x: 0, y: 0, width: 900, height: 100))
         label1.font = UIFont.init(name: "HelveticaNeue-thin", size: 30)
         label1.text = "Page \(pageNumber)"
         label1.textColor = .black
-        label1.center = CGPoint(x: 210, y: 180)
+        label1.center = CGPoint(x: 210, y: 90)
         label1.textAlignment = .center
         addSubview(label1)
         
