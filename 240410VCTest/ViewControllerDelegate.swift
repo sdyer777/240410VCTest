@@ -21,7 +21,7 @@ protocol ViewControllerDelegate {
 
 extension ViewControllerDelegate {
     // Extension adds ability to default parameters to "false"
-
+    
     func presentMenuScreen(doReveal: Bool = false) {
         presentMenuScreen(doReveal: false)
     }

@@ -31,7 +31,6 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         
         heightPercent = (showingAds ? 0.8 : 1.0)
-
         
         // Show Loading Screen
         presentLoadingScreen()
@@ -130,6 +129,7 @@ extension MainViewController: ViewControllerDelegate {
         
         // Show the screen
         let vc = MenuViewController()
+        vc.parentVC = self
         vc.vcDelegate = self
         
         addChild(vc)
@@ -311,7 +311,7 @@ extension MainViewController: ViewControllerDelegate {
                 )
             },
             completion: { _ in
-                vc.didMove(toParent: self)
+               vc.didMove(toParent: self)
                if let cvc = self.currentVC {
                     cvc.willMove(toParent: nil)
                     cvc.view.removeFromSuperview()
@@ -331,6 +331,16 @@ extension MainViewController: ViewControllerDelegate {
     
     func removeAdView() {
         print ("MainViewController::removeAdView - top")
+        
+        showingAds = false
+        heightPercent = 1.0
+        adViewController.willMove(toParent: nil)
+        adViewController.view.removeFromSuperview()
+        adViewController.removeFromParent()
+        
+//showinga        currentVC?.didMove(toParent: self)
+        currentVC?.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * heightPercent)
+
     }
     
     func presentRexScreen() {

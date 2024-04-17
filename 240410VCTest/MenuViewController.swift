@@ -10,6 +10,7 @@ import Foundation
 
 class MenuViewController: UIViewController {
     var vcDelegate: ViewControllerDelegate!
+    weak var parentVC: MainViewController?
     var gameButton: UIButton!
     var helpButton: UIButton!
     var hideAdsButton: UIButton!
@@ -89,12 +90,14 @@ class MenuViewController: UIViewController {
         // Add buttons
         gameButton = createGameButton
         helpButton = createHelpButton
-        hideAdsButton = createHideAdsButton
         rexButton = createRexButton
 
         view.addSubview(gameButton)
         view.addSubview(helpButton)
-        view.addSubview(hideAdsButton)
+        if parentVC!.showingAds {
+            hideAdsButton = createHideAdsButton
+            view.addSubview(hideAdsButton)
+        }
         view.addSubview(rexButton)
     }
     
@@ -109,9 +112,11 @@ class MenuViewController: UIViewController {
         helpButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
         helpButton.center = CGPoint(x: view.frame.width/2, y: 375)
 
-        hideAdsButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
-        hideAdsButton.center = CGPoint(x: view.frame.width/2, y: 450)
-
+        if parentVC!.showingAds {
+            hideAdsButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
+            hideAdsButton.center = CGPoint(x: view.frame.width/2, y: 450)
+        }
+        
         rexButton.frame = CGRect(x: 0, y: 0, width: 200, height: 50)
         rexButton.center = CGPoint(x: view.frame.width/2, y: 525)
     }
@@ -129,6 +134,10 @@ class MenuViewController: UIViewController {
     
     @objc func hideAdsButtonTapped(_ sender: UIButton) {
         print("MenuViewController - hideAdsButton Was Tapped")
+        
+        vcDelegate.removeAdView()
+        
+        hideAdsButton.removeFromSuperview()
     }
     
     @objc func rexButtonTapped(_ sender: UIButton) {
