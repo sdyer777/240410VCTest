@@ -11,6 +11,7 @@ import SpriteKit
 
 class GameViewController: UIViewController {
     var vcDelegate: ViewControllerDelegate!
+    var skView: SKView!
 
     private lazy var backButton: UIButton = {
         let backButton = UIButton(type: .system)
@@ -59,7 +60,7 @@ class GameViewController: UIViewController {
 //        super.viewDidLoad()
         
         print("GameViewController - view.frame = [\(view.frame)], view.frame.size = [\(view.frame.size)]")
-        let skView = SKView(frame: view.frame)
+        skView = SKView(frame: view.frame)
 //        let skView = self.view as SKView
         skView.showsFPS = true
         skView.showsNodeCount = true
@@ -74,6 +75,13 @@ class GameViewController: UIViewController {
  
     }
     
+    override func viewDidLayoutSubviews() {
+        print("GameViewController::viewDidLayoutSubviews - top - view.frame = [\(view.frame)]")
+        super.viewDidLayoutSubviews()
+        
+        skView.frame = view.frame
+    }
+
     @objc func menuButtonTapped(_ sender: UIButton) {
         print("GameViewController - menuButton Was Tapped")
         
