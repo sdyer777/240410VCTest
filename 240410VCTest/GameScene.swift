@@ -9,6 +9,8 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
+    var vcDelegate: ViewControllerDelegate!
+
     
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
@@ -75,6 +77,8 @@ class GameScene: SKScene {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+        
+        vcDelegate.presentMenuScreen(doReveal: true)
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
