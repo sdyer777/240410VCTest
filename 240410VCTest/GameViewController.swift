@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SpriteKit
 
 class GameViewController: UIViewController {
     var vcDelegate: ViewControllerDelegate!
@@ -54,6 +55,23 @@ class GameViewController: UIViewController {
         
         // Add buttons
         view.addSubview(backButton)
+        
+//        super.viewDidLoad()
+        
+        print("GameViewController - view.frame = [\(view.frame)], view.frame.size = [\(view.frame.size)]")
+        let skView = SKView(frame: view.frame)
+//        let skView = self.view as SKView
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        
+        skView.ignoresSiblingOrder = true
+
+        let scene = GameScene(size: skView.bounds.size)
+        skView.presentScene(scene)
+        scene.scaleMode = .aspectFill
+        view.addSubview(skView)
+
+ 
     }
     
     @objc func menuButtonTapped(_ sender: UIButton) {
